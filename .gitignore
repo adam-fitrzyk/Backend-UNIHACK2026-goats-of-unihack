@@ -5,8 +5,8 @@
 ### Python ###
 # Byte-compiled / optimized / DLL files
 __pycache__/
-# *.py[cod]
-# *$py.class
+*.py[cod]
+*$py.class
 
 # C extensions
 # *.so
@@ -43,19 +43,19 @@ pip-log.txt
 pip-delete-this-directory.txt
 
 # Unit test / coverage reports
-# htmlcov/
-# .tox/
-# .nox/
-# .coveage
-# .coverage.*
-# .cache
-# nosetests.xml
-# coverage.xml
-# *.cover
-# *.py,cover
-# .hypothesis/
-# .pytest_cache/
-# pytestdebug.log
+htmlcov/
+.tox/
+.nox/
+.coveage
+.coverage.*
+.cache
+nosetests.xml
+coverage.xml
+*.cover
+*.py,cover
+.hypothesis/
+.pytest_cache/
+pytestdebug.log
 
 # Translations
 # *.mo
