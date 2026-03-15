@@ -26,34 +26,54 @@ def connect_coles(client):
 def connect_woolies(client):
     return client.get_database("woolies")
 
-# get every item from a database and return as a list of urls 
+# get every item from a database and return as a list of documents 
 def get_items_from_collection(db, category):
     items = []
     cursor = db.get_collection(category).find({})
     for document in cursor:
         try:
-            items.append(document['url'])
+            items.append(document)
         except:
             pass
     return items
 
 # search the url of each item from database and compare with the search term
 # to find all relevant items, return as a dictionary 
-def find_items(item, urls):
+def find_items(search_term, items):
     relevant_items = []
-    for url in urls:
-        if re.search(f".*{item.lower()}.*", url):
-            relevant_items.append(url)
-            print(item.lower(), url)
+    print(search_term)
+    for item in items:
+        print(item['name'])
+        if re.search(f".*{search_term.lower()}.*", item['name'].lower()):
+            relevant_items.append(item)
     return relevant_items
  
 
 def package_result_as_json(coles_results, woolies_results):
     results = []
     for item in coles_results:
-        results.append({'brand': 'coles', 'url': item})
+        result = {
+            "name": item["name"],
+            "store": item["store"],
+            "price": item["price"],
+            "unit": item["unit"],
+            "weight": item["sub"],
+            "stock": item["stock"],
+            "url": item["url"]
+        }
+        results.append(result)
     for item in woolies_results:
-        results.append({'brand': 'woolies', 'url': item})
+        result = {
+            "name": item["name"],
+            "store": item["store"],
+            "price": item["price"],
+            "unit": item["unit"],
+            "weight": item["weight"],
+            "stock": item["stock"],
+            "category": item["category"],
+            "url": item["url"]
+        }
+        results.append(result)
     print(results)
     return jsonify(results)
 
