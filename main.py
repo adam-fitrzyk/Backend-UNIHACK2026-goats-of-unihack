@@ -7,33 +7,6 @@ app = Flask(__name__)
 mongodb_connect_string = "mongodb://mongo:yjLewvdJzICKIDhpSqUdrZdxlFdMzKRC@[ballast.proxy.rlwy.net]:52013"
 client = MongoClient(mongodb_connect_string)
 
-@app.route('/')
-def index():
-    return jsonify({"Choo Choo": "Welcome to your Flask app 🚅"})
-
-# grab search item from url
-@app.route('/search/<item>')
-def search(item):
-    coles_db = connect_coles(client)
-    woolies_db = connect_woolies(client)
-
-    coles_items = get_items_from_collection(coles_db, 'vegetables')
-    woolies_items = get_items_from_collection(woolies_db, 'vegetables')
-
-    coles_relevant_items = find_items(item, coles_items)
-    woolies_relevant_items = find_items(item, woolies_items)
-
-    return package_result_as_json(coles_relevant_items, woolies_relevant_items)
-
-
-# grab all items from mongodb
-# grab every item with search item in name
-# return all relevant items
-
-
-if __name__ == '__main__':
-    app.run(debug=True, port=os.getenv("PORT", default=5000))
-
 
 # connect to db and return client
 def connect_db(connection_string):
@@ -77,12 +50,38 @@ def find_info(items):
     pass
 
 def package_result_as_json(coles_results, woolies_results):
-    results = {}
+    results = []
     for item in coles_results:
-        results['brand'] = 'coles'
-        results['url'] = item
+        results.append({'brand': 'coles', 'url': item})
     for item in woolies_results:
-        results['brand'] = 'woolies'
-        results['url'] = item
+        results.append({'brand': 'woolies', 'url': item})
     print(results)
     return jsonify(results)
+
+
+@app.route('/')
+def index():
+    return jsonify({"Choo Choo": "Welcome to your Flask app 🚅"})
+
+# grab search item from url
+@app.route('/search/<item>')
+def search(item):
+    coles_db = connect_coles(client)
+    woolies_db = connect_woolies(client)
+
+    coles_items = get_items_from_collection(coles_db, 'vegetables')
+    woolies_items = get_items_from_collection(woolies_db, 'vegetables')
+
+    coles_relevant_items = find_items(item, coles_items)
+    woolies_relevant_items = find_items(item, woolies_items)
+
+    return package_result_as_json(coles_relevant_items, woolies_relevant_items)
+
+
+# grab all items from mongodb
+# grab every item with search item in name
+# return all relevant items
+
+
+if __name__ == '__main__':
+    app.run(debug=True, port=os.getenv("PORT", default=5000))
