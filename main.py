@@ -68,8 +68,8 @@ def search(item):
     coles_db = connect_coles(client)
     woolies_db = connect_woolies(client)
 
-    coles_items = get_items_from_collection(coles_db, 'vegetables')
-    woolies_items = get_items_from_collection(woolies_db, 'vegetables')
+    coles_items = get_items_from_collection(coles_db, 'fruits')
+    woolies_items = get_items_from_collection(woolies_db, 'fruits')
 
     coles_relevant_items = find_items(item, coles_items)
     woolies_relevant_items = find_items(item, woolies_items)

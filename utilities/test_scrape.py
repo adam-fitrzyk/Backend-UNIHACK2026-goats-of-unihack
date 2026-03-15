@@ -21,14 +21,16 @@ async def scrape_products():
         page = await context.new_page()
 
         for item in product_list:
-            # Updated Selectors for 2026 Woolworths Product Pages
             try:
-                # 1. Wait for the main content area to ignore pop-ups
-                await page.wait_for_selector("shared-price", timeout=10000)
+                print(f"Opening: {item['url']}")
+                # 2. Wait for 'domcontentloaded' instead of 'networkidle'
+                await page.goto(item['url'], wait_until="domcontentloaded", timeout=60000)
                 
-                # 2. Extract Name
+                # 3. Use updated 2026 CSS Selectors (They often change class names)
+                # We use a broad 'h1' search if the specific class fails
+                await page.wait_for_selector("h1", timeout=15000)
+                
                 name = await page.inner_text("h1")
-                
                 # 3. Extract Price using the shared-price component
                 # We look for the dollar and cent parts specifically
                 dollars = await page.inner_text(".price-dollars")
@@ -37,7 +39,7 @@ async def scrape_products():
                 
                 # 4. Extract Unit Price (e.g., "$12.00 / 1kg")
                 unit_price = await page.inner_text(".price-cup")
-
+                
                 results.append({
                     "id": item['id'],
                     "name": name.strip(),
@@ -45,9 +47,14 @@ async def scrape_products():
                     "unit_price": unit_price.strip(),
                     "url": item['url']
                 })
+                
+                # 4. Human-like delay: Don't blitz the server!
+                await asyncio.sleep(random.uniform(3, 7)) 
+                
             except Exception as e:
-                # If the specialized selectors fail, try a broader search but exclude common pop-up text
-                print(f"Refined search failed for ID {item['id']}, trying fallback...")
+                print(f"Blocked or Timeout on ID {item['id']}: {e}")
+                # If blocked, wait longer before next attempt
+                await asyncio.sleep(10)
 
         with open('mongo_collection.json', 'w') as f:
             json.dump(results, f, indent=4)
