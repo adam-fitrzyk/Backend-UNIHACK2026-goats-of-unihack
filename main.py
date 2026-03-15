@@ -1,8 +1,16 @@
 from flask import Flask, jsonify
+from flask_cors import CORS
 from pymongo import MongoClient
-import os, re
+from bs4 import BeautifulSoup
+import os, re, requests
 
 app = Flask(__name__)
+
+CORS(app)
+CORS(app, origins=[
+    "http://localhost:5173/",
+    "https://adam-fitrzyk.github.io/"
+])
 
 mongodb_connect_string = "mongodb://mongo:yjLewvdJzICKIDhpSqUdrZdxlFdMzKRC@[ballast.proxy.rlwy.net]:52013"
 client = MongoClient(mongodb_connect_string)
@@ -39,15 +47,7 @@ def find_items(item, urls):
             relevant_items.append(url)
             print(item.lower(), url)
     return relevant_items
-
-# iterate through each item in dictionary provided and scrape webpage to find
-# name
-# store
-# price
-# img url
-# stock
-def find_info(items):
-    pass
+ 
 
 def package_result_as_json(coles_results, woolies_results):
     results = []
