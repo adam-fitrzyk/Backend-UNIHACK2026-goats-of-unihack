@@ -1,23 +1,14 @@
----
-title: Flask
-description: A popular minimal server framework for Python
-tags:
-  - python
-  - flask
----
+## Overiew
 
-# Python Flask Example
+This is the code that runs the api hosted on railway.
+Use api through this url:
+https://backend-unihack2026-goats-of-unihack-production.up.railway.app/search/ 
+Currently only these items are searchable:
+- apple
+- banana
+- grape
+- raspberry
+- avocado
+- watermelon
 
-This is a [Flask](https://flask.palletsprojects.com/en/1.1.x/) app that serves a simple JSON response.
-
-[![Deploy on Railway](https://railway.app/button.svg)](https://railway.app/new/template/zUcpux)
-
-## ✨ Features
-
-- Python
-- Flask
-
-## 💁‍♀️ How to use
-
-- Install Python requirements `pip install -r requirements.txt`
-- Start the server for development `python3 main.py`
+Just type the fruit you want after /search/.
